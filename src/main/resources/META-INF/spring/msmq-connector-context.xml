@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+	<camelContext xmlns="http://camel.apache.org/schema/spring">
+		<route startupOrder="1" id="msmqSend">
+			<from uri="timer://sender?period={{send.timer}}" />
+			
+			<!-- Setting the label for the message -->
+			<!-- to set correlation id set header MSMQ_CORRELATIONID -->
+			<setHeader headerName="MSMQ_LABEL">
+				<constant>camel route</constant>
+			</setHeader>
+			
+			<!-- setting content for MSMQ message -->
+			<setBody>
+				<simple>Test message ${date:now:yyyy-MM-dd HH:mm:ss}</simple>
+			</setBody>
+			<process ref="msmqSender" />
+		</route>
+		
+		<route startupOrder="2" id="msmqReceive">
+			<from uri="timer://msmqReceive?period={{receive.timer}}" />
+			<process ref="msmqReceiver" />
+			<log message="Message from Queue : ${body}" />
+		</route>
+	</camelContext>
+
+	<bean id="msmqReceiver" class="com.demo.msmqconnector.processor.MsmqMessageReceiver">
+		<property name="msmqContext" ref="msmqContext" />
+	</bean>
+
+	<bean id="msmqSender" class="com.demo.msmqconnector.processor.MsmqMessageSender">
+		<property name="msmqContext" ref="msmqContext" />
+	</bean>
+
+	<bean id="msmqContext" class="com.demo.msmqconnector.MsmqContext">
+		<property name="host" value="${msmq.host}" />
+		<property name="qname" value="${msmq.qname}" />
+	</bean>
+
+	<bean id="bridgePropertyPlaceholder" class="org.apache.camel.spring.spi.BridgePropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:msmq-connector.properties" />
+	</bean>
+
+</beans>
