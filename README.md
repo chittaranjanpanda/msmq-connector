@@ -16,3 +16,6 @@ To build this project use
 To run this project with Maven use
 
     mvn camel:run
+    
+
+For library and dependency follow https://github.com/ikerlan2015/MsmqJava
