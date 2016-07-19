@@ -2,6 +2,8 @@
 Operation on MSMQ using Apache Camel
 
 Prerequisites
+- Windows OS and Java 7 or greater
+
 - Install MSMQ on your system. for help follow this link
     https://msdn.microsoft.com/en-us/library/aa967729(v=vs.110).aspx
     
@@ -16,6 +18,3 @@ To build this project use
 To run this project with Maven use
 
     mvn camel:run
-    
-
-For library and dependency follow https://github.com/ikerlan2015/MsmqJava
