@@ -8,6 +8,9 @@ Prerequisites
 
 - Install java7+ and maven    
     
+- Change the host and queue name in msmq-connector.properties file present in /src/main/resources/ folder
+
+- Move to the base directory where pom.xml is present and run following commands
 
 To build this project use
 
